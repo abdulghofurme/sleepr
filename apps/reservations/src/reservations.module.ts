@@ -8,6 +8,8 @@ import {
 } from './models/reservation.schema';
 import { ReservationsRepository } from './reservations.repository';
 import { LoggerModule } from '@app/common';
+import { ConfigModule } from '@nestjs/config';
+import { z } from 'zod';
 
 @Module({
   imports: [
@@ -19,6 +21,24 @@ import { LoggerModule } from '@app/common';
       },
     ]),
     LoggerModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validate: (config) => {
+        const parsed = z
+          .object({
+            PORT: z.coerce.number(),
+            MONGODB_URI: z.string().url(),
+          })
+          .safeParse(config);
+
+        if (!parsed.success) {
+          console.log('Config validation error:', parsed.error.format());
+          throw new Error('Invalid configuration');
+        }
+
+        return parsed.data;
+      },
+    }),
   ],
   controllers: [ReservationsController],
   providers: [ReservationsService, ReservationsRepository],
