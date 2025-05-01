@@ -18,7 +18,8 @@ import { JWTStrategy } from './users/strategies/jwt.strategy';
       validate: (config) => {
         const parsed = z
           .object({
-            PORT: z.coerce.number(),
+            HTTP_PORT: z.coerce.number(),
+            TCP_PORT: z.coerce.number(),
             MONGODB_URI: z.string().url(),
             JWT_SECRET: z.string(),
             JWT_EXPIRATION: z.coerce.number(),

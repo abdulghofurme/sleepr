@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { UserDocument } from './users/models/user.schema';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { TTokenPayload } from './types/token-payload.type';
+import { CurrentUserDto } from '@app/common';
 
 @Injectable()
 export class AuthService {
@@ -12,9 +12,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(user: UserDocument, response: Response) {
+  async login(user: CurrentUserDto, response: Response) {
     const tokenPayload: TTokenPayload = {
-      userId: user._id.toHexString(),
+      userId: user._id,
     };
     const token = this.jwtService.sign(tokenPayload);
 
