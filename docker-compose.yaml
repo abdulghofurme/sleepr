@@ -20,7 +20,19 @@ services:
     env_file:
       - ./apps/auth/.env
     ports:
-      - '3001:3000'
+      - '3001:3001'
+    volumes:
+      - .:/usr/src/app
+  payment:
+    build:
+      context: .
+      dockerfile: ./apps/payment/Dockerfile
+      target: development
+    command: pnpm run start:dev payments
+    env_file:
+      - ./apps/payments/.env
+    ports:
+      - '3003:30003'
     volumes:
       - .:/usr/src/app
   mongo_sleepr:
