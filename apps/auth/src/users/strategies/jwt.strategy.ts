@@ -22,7 +22,6 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate({ userId }: TTokenPayload) {
-    console.log(userId, 'USER ID')
     const user = await this.usersService.getUser({ _id: userId });
     delete user.password;
     return user;

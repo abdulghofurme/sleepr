@@ -11,7 +11,7 @@ import { LoggerModule } from '@app/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { z } from 'zod';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AUTH_SERVICE } from '@app/common/constants';
+import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
 
 @Module({
   imports: [
@@ -30,6 +30,10 @@ import { AUTH_SERVICE } from '@app/common/constants';
           .object({
             PORT: z.coerce.number(),
             MONGODB_URI: z.string().url(),
+            AUTH_HOST: z.string(),
+            AUTH_PORT: z.coerce.number(),
+            PAYMENTS_HOST: z.string(),
+            PAYMENTS_PORT: z.coerce.number(),
           })
           .safeParse(config);
 
@@ -49,6 +53,17 @@ import { AUTH_SERVICE } from '@app/common/constants';
           options: {
             host: configService.get('AUTH_HOST'),
             port: configService.get('AUTH_PORT'),
+          },
+        }),
+        inject: [ConfigService],
+      },
+      {
+        name: PAYMENTS_SERVICE,
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('PAYMENTS_HOST'),
+            port: configService.get('PAYMENTS_PORT'),
           },
         }),
         inject: [ConfigService],
