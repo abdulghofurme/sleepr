@@ -14,6 +14,7 @@ import { LoggerModule } from '@app/common';
         const parsed = z
           .object({
             TCP_PORT: z.coerce.number(),
+            STRIPE_SECRET_KEY: z.string(),
           })
           .safeParse(config);
 
