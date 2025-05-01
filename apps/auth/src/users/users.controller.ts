@@ -1,23 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Controller, Delete, Get, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CurrentUser } from '../durrent-user.decorator';
+import { UserDocument } from './models/user.schema';
+import { JWTAuthGuard } from '../guards/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @UseGuards(JWTAuthGuard)
+  @Get('me')
+  async getUser(@CurrentUser() user: UserDocument) {
+    return user;
   }
 
-  @Get()
-  async findAll() {
-    return this.usersService.findAll();
-  }
-
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  @UseGuards(JWTAuthGuard)
+  @Delete('me')
+  async remove(@CurrentUser() user: UserDocument) {
+    return this.usersService.remove(user._id.toHexString());
   }
 }
