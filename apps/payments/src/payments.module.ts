@@ -3,15 +3,17 @@ import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 import { ConfigModule } from '@nestjs/config';
 import { z } from 'zod';
+import { LoggerModule } from '@app/common';
 
 @Module({
   imports: [
+    LoggerModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate: (config) => {
         const parsed = z
           .object({
-            HTTP_PORT: z.coerce.number(),
+            TCP_PORT: z.coerce.number(),
           })
           .safeParse(config);
 
