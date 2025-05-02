@@ -17,7 +17,9 @@ export class JWTAuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const jwt = context.switchToHttp().getRequest().cookies?.Authentication;
+    const request = context.switchToHttp().getRequest();
+    const jwt =
+      request.cookies?.Authentication || request.headers?.authentication;
     if (!jwt) {
       throw new UnauthorizedException();
     }

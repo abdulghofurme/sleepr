@@ -28,6 +28,9 @@ export class AuthService {
       httpOnly: true,
       secure: true,
     });
-    return user;
+    return {
+      ...user,
+      access_token: token,
+    };
   }
 }
