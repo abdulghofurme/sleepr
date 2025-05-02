@@ -16,10 +16,13 @@ export class ReservationsService {
 
   async create(
     createReservationDto: CreateReservationDto,
-    { _id: userId }: CurrentUserDto,
+    { _id: userId, email }: CurrentUserDto,
   ) {
     return this.paymentsService
-      .send('create_charge', createReservationDto.charge)
+      .send('create_charge', {
+        ...createReservationDto.charge,
+        email,
+      })
       .pipe(
         map((res) =>
           this.reservationRepository.create({
