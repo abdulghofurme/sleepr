@@ -15,14 +15,14 @@ export class PaymentsService {
   constructor(private readonly configService: ConfigService) {}
 
   async createCharge({
-    paymentMethodId: _payment_method,
+    paymentMethodId,
     amount,
   }: CreateChargeDto) {
     const paymentIntent = await this.stripe.paymentIntents.create({
       amount: amount * 100,
       currency: 'usd',
       payment_method_types: ['card'],
-      payment_method: "pm_card_visa", // payemnt_method should be secure created from frontend
+      payment_method: paymentMethodId || "pm_card_visa", // payemnt_method should be secure created from frontend
       // debug
       confirm: true, // auto confirm
     });
