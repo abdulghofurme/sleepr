@@ -46,10 +46,16 @@ export class PaymentsService {
       confirm: true, // auto confirm
     });
 
+    const html = this.compileTemplate('create-charge', {
+      email,
+      amount,
+      paymentId: paymentIntent.id,
+    });
+
     this.notificationsService.emit<string, NotifyEmailDto>('notify_email', {
       email,
       subject: `Sleepr payment - ${paymentIntent.id}`,
-      text: `You've charged $${amount} from ${paymentIntent.id}`,
+      html,
     });
 
     return paymentIntent;

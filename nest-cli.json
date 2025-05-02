@@ -41,7 +41,8 @@
       "entryFile": "main",
       "sourceRoot": "apps/payments/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/payments/tsconfig.app.json"
+        "tsConfigPath": "apps/payments/tsconfig.app.json",
+        "webpackConfigPath": "apps/payments/webpack.config.js"
       }
     },
     "notifications": {
