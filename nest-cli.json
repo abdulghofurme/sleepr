@@ -5,7 +5,13 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/reservations/tsconfig.app.json"
+    "tsConfigPath": "apps/reservations/tsconfig.app.json",
+    "assets": [
+      {
+        "include": "apps/notifications/src/templates/**/*",
+        "outDir": "dist/apps/notifications/templates"
+      }
+    ]
   },
   "projects": {
     "common": {

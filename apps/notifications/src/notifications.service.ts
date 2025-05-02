@@ -1,11 +1,15 @@
 import { NotifyEmailDto } from '@app/common/dto/notify-email.dto';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from 'nestjs-pino';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly logger: Logger,
+  ) {}
 
   private readonly transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -18,13 +22,18 @@ export class NotificationsService {
     },
   });
 
-  async notifyEmail({ email }: NotifyEmailDto) {
-    console.log({ email });
-    await this.transporter.sendMail({
-      from: this.configService.get('SMPTP_USER'),
-      to: email,
-      subject: 'Sleepr Notification',
-      text: 'test',
-    });
+  async notifyEmail({ email, text, html, subject }: NotifyEmailDto) {
+    try {
+      await this.transporter.sendMail({
+        from: this.configService.get('SMTP_USER'),
+        to: email,
+        subject,
+        text,
+        html,
+      });
+    } catch (error) {
+      this.logger.error('Failed to send email', error.stack);
+      throw error;
+    }
   }
 }
