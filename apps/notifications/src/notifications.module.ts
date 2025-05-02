@@ -14,6 +14,10 @@ import { z } from 'zod';
         const parsed = z
           .object({
             TCP_PORT: z.coerce.number(),
+            SMTP_USER: z.string(),
+            GOOGLE_OAUTH_CLIENT_ID: z.string(),
+            GOOGLE_OAUTH_CLIENT_SECRET: z.string(),
+            GOOGLE_OAUTH_REFRESH_TOKEN: z.string(),
           })
           .safeParse(config);
 
