@@ -3,8 +3,6 @@ import {
   IsDate,
   IsNotEmpty,
   IsNotEmptyObject,
-  IsOptional,
-  IsString,
   ValidateNested,
 } from 'class-validator';
 import { CreateChargeDto } from '@app/common';
@@ -31,14 +29,6 @@ export class CreateReservationDto {
   })
   @IsDate()
   endDate: Date;
-
-  @IsOptional()
-  @IsString()
-  userId: string;
-
-  @IsNotEmpty()
-  @IsString()
-  invoiceId: string;
 
   @IsNotEmptyObject()
   @ValidateNested()

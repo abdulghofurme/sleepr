@@ -23,7 +23,7 @@ services:
       - '3001:3001'
     volumes:
       - .:/usr/src/app
-  payment:
+  payments:
     build:
       context: .
       dockerfile: ./apps/payments/Dockerfile

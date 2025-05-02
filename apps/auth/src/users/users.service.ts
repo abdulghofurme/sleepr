@@ -7,10 +7,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcryptjs';
 import { GetUserDto } from './dto/get-user.dto';
+import { UserDocument } from './models/user.schema';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
+  sanitizeUser(user: UserDocument): Omit<UserDocument, 'password'> {
+    const { password, ...sanitizedUser } = user;
+    return sanitizedUser;
+  }
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -18,8 +23,7 @@ export class UsersService {
         ...createUserDto,
         password: await bcrypt.hash(createUserDto.password, 10),
       });
-      delete user.password;
-      return user;
+      return this.sanitizeUser(user);
     } catch (error) {
       if (error.code === 11000) {
         return {
@@ -31,15 +35,13 @@ export class UsersService {
   }
 
   async getUser(getUserDto: GetUserDto) {
-    return this.usersRepository.findOne(getUserDto);
-  }
-
-  async findAll() {
-    return this.usersRepository.find({});
+    const user = await this.usersRepository.findOne(getUserDto);
+    return this.sanitizeUser(user);
   }
 
   async remove(_id: string) {
-    return this.usersRepository.findOneAndDelete({ _id });
+    const user = await this.usersRepository.findOneAndDelete({ _id });
+    return this.sanitizeUser(user);
   }
 
   async validateUser(email: string, password: string) {
@@ -50,7 +52,6 @@ export class UsersService {
       throw new UnauthorizedException('Credentials are not valid.');
     }
 
-    delete user.password;
-    return user;
+    return this.sanitizeUser(user);
   }
 }
