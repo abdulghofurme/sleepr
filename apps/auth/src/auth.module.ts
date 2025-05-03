@@ -20,9 +20,15 @@ import { JWTStrategy } from './users/strategies/jwt.strategy';
           .object({
             HTTP_PORT: z.coerce.number(),
             TCP_PORT: z.coerce.number(),
-            MONGODB_URI: z.string().url(),
             JWT_SECRET: z.string(),
             JWT_EXPIRATION: z.coerce.number(),
+            // handled by getOrThrow, but declare to document what config/env needed
+            MYSQL_DATABASE: z.string(),
+            MYSQL_USERNAME: z.string(),
+            MYSQL_PASSWORD: z.string(),
+            MYSQL_HOST: z.string(),
+            MYSQL_PORT: z.coerce.number(),
+            MYSQL_SYNCHRONIZE: z.coerce.boolean(),
           })
           .safeParse(config);
 

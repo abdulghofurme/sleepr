@@ -40,23 +40,23 @@ export class ReservationsController {
 
   @Get(':id')
   @UseGuards(JWTAuthGuard)
-  async findOne(@Param('id') id: string) {
-    return this.reservationsService.findOne(id);
+  async findOne(@Param('id') id: number) {
+    return this.reservationsService.findOne(+id);
   }
 
   @Patch(':id')
   @UseGuards(JWTAuthGuard)
   async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateReservationDto: UpdateReservationDto,
   ) {
-    return this.reservationsService.update(id, updateReservationDto);
+    return this.reservationsService.update(+id, updateReservationDto);
   }
 
   @Delete(':id')
   @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles('admin')
-  async remove(@Param('id') id: string) {
-    return this.reservationsService.remove(id);
+  async remove(@Param('id') id: number) {
+    return this.reservationsService.remove(+id);
   }
 }
