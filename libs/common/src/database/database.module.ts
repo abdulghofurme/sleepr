@@ -1,23 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-// MONGOOSE
-// import { ModelDefinition, MongooseModule } from '@nestjs/mongoose';
-
-// MYSQL
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 
 @Module({
   imports: [
-    // MONGOOSE
-    // MongooseModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   useFactory: (configService: ConfigService) => ({
-    //     uri: configService.get('MONGODB_URI'),
-    //   }),
-    //   inject: [ConfigService],
-    // }),
-    // TYPEORM
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -35,11 +22,6 @@ import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-clas
   ],
 })
 export class DatabaseModule {
-  // MONGOOSE
-  // static forFeature(models: ModelDefinition[]) {
-  // return MongooseModule.forFeature(models);
-  // }
-
   static forFeature(models: EntityClassOrSchema[]) {
     return TypeOrmModule.forFeature(models);
   }
