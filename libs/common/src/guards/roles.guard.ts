@@ -1,6 +1,11 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { filter, from, map, Observable, toArray } from 'rxjs';
+import { catchError, filter, from, map, Observable, toArray } from 'rxjs';
 import { CurrentUserDto } from '../dto';
 import { Logger } from 'nestjs-pino';
 
@@ -32,8 +37,12 @@ export class RolesGuard implements CanActivate {
       filter((role) => requiredRoles.includes(role)),
       toArray(),
       map((collisions) => {
+        if (collisions.length === 0) throw new UnauthorizedException();
         // this.logger.log(collisions) // check collision here
-        return collisions.length > 0;
+        return true;
+      }),
+      catchError(() => {
+        throw new UnauthorizedException();
       }),
     );
   }
