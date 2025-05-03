@@ -45,5 +45,11 @@ services:
       - ./apps/notifications/.env
     volumes:
       - .:/usr/src/app
-  mongo_sleepr:
-    image: mongo
+  # mongo_sleepr:
+  #   image: mongo
+  mysql_sleepr:
+    image: mysql
+    env_file:
+      - .env
+    ports:
+      - '3306:3306'
