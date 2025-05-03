@@ -1,5 +1,7 @@
+import { Role } from '@app/common/models/role.entity';
+
 export class CurrentUserDto {
-  _id: string;
+  id: number;
   email: string;
-  roles: string[];
+  roles: Role[];
 }

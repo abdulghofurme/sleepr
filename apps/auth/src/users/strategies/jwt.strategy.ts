@@ -23,6 +23,6 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate({ userId }: TTokenPayload) {
-    return this.usersService.getUser({ _id: userId });
+    return this.usersService.getUser({ id: userId });
   }
 }

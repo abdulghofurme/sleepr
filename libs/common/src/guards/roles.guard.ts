@@ -34,7 +34,7 @@ export class RolesGuard implements CanActivate {
 
     // rxjs to readability & easy debug
     return from(user?.roles || []).pipe(
-      filter((role) => requiredRoles.includes(role)),
+      filter((role) => requiredRoles.includes(role.name)),
       toArray(),
       map((collisions) => {
         if (collisions.length === 0) throw new UnauthorizedException();

@@ -16,6 +16,6 @@ export class UsersController {
   @UseGuards(JWTAuthGuard)
   @Delete('me')
   async remove(@CurrentUser() user: CurrentUserDto) {
-    return this.usersService.remove(user._id);
+    return this.usersService.remove(user.id);
   }
 }

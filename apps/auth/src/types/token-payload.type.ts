@@ -1,3 +1,3 @@
 export type TTokenPayload = {
-  userId: string;
+  userId: number;
 };
