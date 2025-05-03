@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { UserDocument } from './users/models/user.schema';
@@ -15,6 +15,11 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
   ) {}
+
+  @Get('health-check')
+  async healthCheck() {
+    return { healhtCheck: true };
+  }
 
   @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {

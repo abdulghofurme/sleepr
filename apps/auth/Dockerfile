@@ -26,7 +26,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY pnpm-lock.yaml ./
 
-RUN npm intall -g pnpm
+RUN npm install -g pnpm
 RUN pnpm install --prod
 
 COPY --from=development ./usr/src/app/dist ./dist
