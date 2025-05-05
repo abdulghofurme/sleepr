@@ -13,11 +13,12 @@ import { z } from 'zod';
       validate: (config) => {
         const parsed = z
           .object({
-            TCP_PORT: z.coerce.number(),
             SMTP_USER: z.string(),
             GOOGLE_OAUTH_CLIENT_ID: z.string(),
             GOOGLE_OAUTH_CLIENT_SECRET: z.string(),
             GOOGLE_OAUTH_REFRESH_TOKEN: z.string(),
+            // handled by getOrThrow, but declare to document what config/env needed
+            RABBITMQ_URI: z.string(),
           })
           .safeParse(config);
 

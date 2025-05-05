@@ -19,7 +19,6 @@ import { JWTStrategy } from './users/strategies/jwt.strategy';
         const parsed = z
           .object({
             HTTP_PORT: z.coerce.number(),
-            TCP_PORT: z.coerce.number(),
             JWT_SECRET: z.string(),
             JWT_EXPIRATION: z.coerce.number(),
             // handled by getOrThrow, but declare to document what config/env needed
@@ -29,6 +28,7 @@ import { JWTStrategy } from './users/strategies/jwt.strategy';
             MYSQL_HOST: z.string(),
             MYSQL_PORT: z.coerce.number(),
             MYSQL_SYNCHRONIZE: z.coerce.boolean(),
+            RABBITMQ_URI: z.string(),
           })
           .safeParse(config);
 

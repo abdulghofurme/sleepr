@@ -15,10 +15,9 @@ import { NOTIFICATIONS_SERVICE } from '@app/common/constants';
       validate: (config) => {
         const parsed = z
           .object({
-            TCP_PORT: z.coerce.number(),
             STRIPE_SECRET_KEY: z.string(),
-            NOTIFICATIONS_HOST: z.string(),
-            NOTIFICATIONS_PORT: z.coerce.number(),
+            // handled by getOrThrow, but declare to document what config/env needed
+            RABBITMQ_URI: z.string(),
           })
           .safeParse(config);
 
@@ -34,10 +33,10 @@ import { NOTIFICATIONS_SERVICE } from '@app/common/constants';
       {
         name: NOTIFICATIONS_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.get('NOTIFICATIONS_HOST'),
-            port: configService.get('NOTIFICATIONS_PORT'),
+            urls: [configService.getOrThrow<string>('RABBITMQ_URI')],
+            queue: 'notifications',
           },
         }),
         inject: [ConfigService],
