@@ -1,4 +1,9 @@
-import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import {
   Ctx,
@@ -8,6 +13,7 @@ import {
 } from '@nestjs/microservices';
 import { PaymentsCreateChargeDto } from './dto/payments-create-charge.dtos';
 import { Logger } from 'nestjs-pino';
+import { RmqRetryInteceptor } from './interceptors/rmq-retry.interceptor';
 
 @Controller()
 export class PaymentsController {
@@ -17,6 +23,7 @@ export class PaymentsController {
   ) {}
 
   @MessagePattern('create_charge')
+  @UseInterceptors(RmqRetryInteceptor)
   @UsePipes(new ValidationPipe())
   async createCharge(
     @Payload() data: PaymentsCreateChargeDto,
