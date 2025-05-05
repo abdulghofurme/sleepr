@@ -7,10 +7,14 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { PaymentsCreateChargeDto } from './dto/payments-create-charge.dtos';
+import { Logger } from 'nestjs-pino';
 
 @Controller()
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+  constructor(
+    private readonly paymentsService: PaymentsService,
+    private readonly logger: Logger,
+  ) {}
 
   @MessagePattern('create_charge')
   @UsePipes(new ValidationPipe())
@@ -20,9 +24,15 @@ export class PaymentsController {
   ) {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
-    const paymentIntent = await this.paymentsService.createCharge(data);
 
-    channel.ack(originalMsg);
-    return paymentIntent;
+    try {
+      const paymentIntent = await this.paymentsService.createCharge(data);
+      channel.ack(originalMsg);
+
+      return paymentIntent;
+    } catch (error) {
+      this.logger.log(`create_charge error: `, error);
+      channel.nack(originalMsg, false, true); // requeue
+    }
   }
 }
