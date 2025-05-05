@@ -21,10 +21,6 @@ import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
         const parsed = z
           .object({
             PORT: z.coerce.number(),
-            AUTH_HOST: z.string(),
-            AUTH_PORT: z.coerce.number(),
-            PAYMENTS_HOST: z.string(),
-            PAYMENTS_PORT: z.coerce.number(),
             // handled by getOrThrow, but declare to document what config/env needed
             MYSQL_DATABASE: z.string(),
             MYSQL_USERNAME: z.string(),
@@ -32,6 +28,7 @@ import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
             MYSQL_HOST: z.string(),
             MYSQL_PORT: z.coerce.number(),
             MYSQL_SYNCHRONIZE: z.coerce.boolean(),
+            RABBITMQ_URI: z.string(),
           })
           .safeParse(config);
 
@@ -47,10 +44,10 @@ import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
       {
         name: AUTH_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.get('AUTH_HOST'),
-            port: configService.get('AUTH_PORT'),
+            url: [configService.getOrThrow<string>('RABBITMQ_URI')],
+            queue: 'auth',
           },
         }),
         inject: [ConfigService],
@@ -58,10 +55,10 @@ import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
       {
         name: PAYMENTS_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.get('PAYMENTS_HOST'),
-            port: configService.get('PAYMENTS_PORT'),
+            url: [configService.getOrThrow<string>('RABBITMQ_URI')],
+            queue: 'payments',
           },
         }),
         inject: [ConfigService],
