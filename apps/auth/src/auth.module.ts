@@ -28,7 +28,7 @@ import { JWTStrategy } from './users/strategies/jwt.strategy';
             MYSQL_HOST: z.string(),
             MYSQL_PORT: z.coerce.number(),
             MYSQL_SYNCHRONIZE: z.coerce.boolean(),
-            RABBITMQ_URI: z.string(),
+            AUTH_GRPC_URL: z.string(),
           })
           .safeParse(config);
 

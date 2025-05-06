@@ -17,7 +17,8 @@ import { NOTIFICATIONS_SERVICE } from '@app/common/constants';
           .object({
             STRIPE_SECRET_KEY: z.string(),
             // handled by getOrThrow, but declare to document what config/env needed
-            RABBITMQ_URI: z.string(),
+            RABBITMQ_URI: z.string(), // client/subscriber
+            PAYMENTS_GRPC_URL: z.string(), // server
           })
           .safeParse(config);
 
