@@ -11,7 +11,7 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { PaymentsCreateChargeDto } from './dto/payments-create-charge.dtos';
+import { PaymentsCreateChargeDto } from './dto/payments-create-charge.dto';
 import { Logger } from 'nestjs-pino';
 import { RmqRetryInteceptor } from './interceptors/rmq-retry.interceptor';
 

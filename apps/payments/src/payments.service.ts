@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
 import Stripe from 'stripe';
-import { PaymentsCreateChargeDto } from './dto/payments-create-charge.dtos';
+import { PaymentsCreateChargeDto } from './dto/payments-create-charge.dto';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as hbs from 'handlebars';
