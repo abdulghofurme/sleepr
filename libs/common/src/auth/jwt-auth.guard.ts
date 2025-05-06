@@ -9,12 +9,16 @@ import {
 import { catchError, map, Observable, tap } from 'rxjs';
 import { ClientGrpc } from '@nestjs/microservices';
 import { AUTH_SERVICE_NAME, AuthServiceClient } from '../types';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class JWTAuthGuard implements CanActivate, OnModuleInit {
   private authService: AuthServiceClient;
 
-  constructor(@Inject(AUTH_SERVICE_NAME) private readonly client: ClientGrpc) {}
+  constructor(
+    @Inject(AUTH_SERVICE_NAME) private readonly client: ClientGrpc,
+    private readonly logger: Logger,
+  ) {}
 
   onModuleInit() {
     this.authService =
@@ -39,7 +43,9 @@ export class JWTAuthGuard implements CanActivate, OnModuleInit {
           context.switchToHttp().getRequest().user = res;
         }),
         map(() => true),
-        catchError(() => {
+        catchError((err) => {
+          this.logger.log(err);
+
           throw new UnauthorizedException();
         }),
       );
