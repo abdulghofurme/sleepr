@@ -12,6 +12,7 @@ async function bootstrap() {
     options: {
       urls: [configService.getOrThrow('RABBITMQ_URI')],
       queue: 'notifications',
+      noAck: false,
     },
   });
   app.useLogger(app.get(Logger));

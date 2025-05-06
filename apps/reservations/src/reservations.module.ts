@@ -1,14 +1,20 @@
 import { Module } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { ReservationsController } from './reservations.controller';
-import { DatabaseModule } from '@app/common';
+import { 
+  AUTH_PACKAGE_NAME, 
+  AUTH_SERVICE_NAME, 
+  DatabaseModule, 
+  PAYMENTS_PACKAGE_NAME, 
+  PAYMENTS_SERVICE_NAME,
+} from '@app/common';
 import { Reservation } from './models/reservation.entity';
 import { ReservationsRepository } from './reservations.repository';
 import { LoggerModule } from '@app/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { z } from 'zod';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -28,7 +34,8 @@ import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
             MYSQL_HOST: z.string(),
             MYSQL_PORT: z.coerce.number(),
             MYSQL_SYNCHRONIZE: z.coerce.boolean(),
-            RABBITMQ_URI: z.string(),
+            AUTH_GRPC_URL: z.string(), // client
+            PAYMENTS_GRPC_URL: z.string(), // client
           })
           .safeParse(config);
 
@@ -42,23 +49,25 @@ import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
     }),
     ClientsModule.registerAsync([
       {
-        name: AUTH_SERVICE,
+        name: AUTH_SERVICE_NAME,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.RMQ,
+          transport: Transport.GRPC,
           options: {
-            url: [configService.getOrThrow<string>('RABBITMQ_URI')],
-            queue: 'auth',
+            package: AUTH_PACKAGE_NAME,
+            protoPath: join(__dirname, '../../../proto/auth.proto'),
+            url: configService.getOrThrow("AUTH_GRPC_URL")
           },
         }),
         inject: [ConfigService],
       },
       {
-        name: PAYMENTS_SERVICE,
+        name: PAYMENTS_SERVICE_NAME,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.RMQ,
+          transport: Transport.GRPC,
           options: {
-            url: [configService.getOrThrow<string>('RABBITMQ_URI')],
-            queue: 'payments',
+            package: PAYMENTS_PACKAGE_NAME,
+            protoPath: join(__dirname, '../../../proto/payments.proto'),
+            url: configService.getOrThrow("PAYMENTS_GRPC_URL")
           },
         }),
         inject: [ConfigService],
@@ -68,4 +77,4 @@ import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
   controllers: [ReservationsController],
   providers: [ReservationsService, ReservationsRepository],
 })
-export class ReservationsModule {}
+export class ReservationsModule { }

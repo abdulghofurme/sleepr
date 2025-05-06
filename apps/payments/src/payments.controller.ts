@@ -1,45 +1,25 @@
 import {
   Controller,
-  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import {
-  Ctx,
-  MessagePattern,
-  Payload,
-  RmqContext,
-} from '@nestjs/microservices';
-import { PaymentsCreateChargeDto } from './dto/payments-create-charge.dtos';
+import { PaymentsCreateChargeDto } from './dto/payments-create-charge.dto';
 import { Logger } from 'nestjs-pino';
-import { RmqRetryInteceptor } from './interceptors/rmq-retry.interceptor';
+import { PaymentsServiceController, PaymentsServiceControllerMethods } from '@app/common';
 
 @Controller()
-export class PaymentsController {
+@PaymentsServiceControllerMethods()
+export class PaymentsController implements PaymentsServiceController {
   constructor(
     private readonly paymentsService: PaymentsService,
     private readonly logger: Logger,
-  ) {}
+  ) { }
 
-  @MessagePattern('create_charge')
-  @UseInterceptors(RmqRetryInteceptor)
   @UsePipes(new ValidationPipe())
   async createCharge(
-    @Payload() data: PaymentsCreateChargeDto,
-    @Ctx() context: RmqContext,
+    data: PaymentsCreateChargeDto,
   ) {
-    const channel = context.getChannelRef();
-    const originalMsg = context.getMessage();
-
-    try {
-      const paymentIntent = await this.paymentsService.createCharge(data);
-      channel.ack(originalMsg);
-
-      return paymentIntent;
-    } catch (error) {
-      this.logger.log(`create_charge error: `, error);
-      channel.nack(originalMsg, false, true); // requeue
-    }
+    return this.paymentsService.createCharge(data);
   }
 }

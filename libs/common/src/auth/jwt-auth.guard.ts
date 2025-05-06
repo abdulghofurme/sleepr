@@ -3,16 +3,23 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
+  OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
 import { catchError, map, Observable, tap } from 'rxjs';
-import { AUTH_SERVICE } from '../constants/services';
-import { ClientProxy } from '@nestjs/microservices';
-import { CurrentUserDto } from '../dto';
+import { ClientGrpc } from '@nestjs/microservices';
+import { AUTH_SERVICE_NAME, AuthServiceClient } from '../types';
 
 @Injectable()
-export class JWTAuthGuard implements CanActivate {
-  constructor(@Inject(AUTH_SERVICE) private readonly authClient: ClientProxy) {}
+export class JWTAuthGuard implements CanActivate, OnModuleInit {
+  private authService: AuthServiceClient;
+
+  constructor(@Inject(AUTH_SERVICE_NAME) private readonly client: ClientGrpc) {}
+
+  onModuleInit() {
+    this.authService =
+      this.client.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
+  }
 
   canActivate(
     context: ExecutionContext,
@@ -23,9 +30,8 @@ export class JWTAuthGuard implements CanActivate {
     if (!jwt) {
       throw new UnauthorizedException();
     }
-
-    return this.authClient
-      .send<CurrentUserDto>('authenticate', {
+    return this.authService
+      .authenticate({
         Authentication: jwt,
       })
       .pipe(

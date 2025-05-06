@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthService {
+    rpc Authenticate (Authentication) returns (UserMessage) {}
+}
+
+message Authentication {
+    string Authentication = 1;
+}
+
+message UserMessage {
+    int64 id = 1;
+    string email = 2;
+    repeated Role roles = 3;
+}
+
+message Role {
+    int64 id = 1;
+    string name = 2;
+}
