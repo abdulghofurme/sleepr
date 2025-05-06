@@ -4,15 +4,25 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Response } from 'express';
 import { UsersService } from './users/users.service';
 import { CreateUserDto } from './users/dto/create-user.dto';
-import { MessagePattern } from '@nestjs/microservices';
+import { Payload } from '@nestjs/microservices';
 import { JWTAuthGuard } from './guards/jwt-auth.guard';
-import { CurrentUser, CurrentUserDto } from '@app/common';
+import {
+  Authentication,
+  AuthServiceController,
+  AuthServiceControllerMethods,
+  CurrentUser,
+  CurrentUserDto,
+  UserMessage,
+} from '@app/common';
+import { Logger } from 'nestjs-pino';
 
 @Controller()
-export class AuthController {
+@AuthServiceControllerMethods()
+export class AuthController implements AuthServiceController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
+    private readonly logger: Logger,
   ) {}
 
   @Get('health-check')
@@ -34,9 +44,8 @@ export class AuthController {
     return this.authService.login(user, response);
   }
 
-  @MessagePattern('authenticate')
   @UseGuards(JWTAuthGuard)
-  async authenticate(@CurrentUser() user: CurrentUserDto) {
-    return user;
+  async authenticate(@Payload() data: Authentication & { user: UserMessage }) {
+    return data.user;
   }
 }
