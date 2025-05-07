@@ -44,14 +44,14 @@ export class ReservationsController {
     return this.reservationsService.findOne(+id);
   }
 
-  @Patch(':id')
-  @UseGuards(JWTAuthGuard)
-  async update(
-    @Param('id') id: number,
-    @Body() updateReservationDto: UpdateReservationDto,
-  ) {
-    return this.reservationsService.update(+id, updateReservationDto);
-  }
+  // @Patch(':id')
+  // @UseGuards(JWTAuthGuard)
+  // async update(
+  //   @Param('id') id: number,
+  //   @Body() updateReservationDto: UpdateReservationDto,
+  // ) {
+  //   return this.reservationsService.update(+id, updateReservationDto);
+  // }
 
   @Delete(':id')
   @UseGuards(JWTAuthGuard, RolesGuard)
