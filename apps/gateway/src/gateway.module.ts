@@ -75,6 +75,7 @@ import { authContext } from './auth.context';
             url: configService.getOrThrow('AUTH_GRPC_URL'),
           },
         }),
+        inject: [ConfigService],
       },
     ]),
   ],

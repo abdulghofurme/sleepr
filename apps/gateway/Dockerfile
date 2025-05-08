@@ -1,6 +1,6 @@
-FROM node:alpin AS development
+FROM node:alpine AS development
 
-WORKDIR /usrr/src/app
+WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY pnpm-lock.yaml ./
