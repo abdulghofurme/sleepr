@@ -5,7 +5,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@ObjectType({isAbstract: true})
+@ObjectType({ isAbstract: true })
 export class AbstractEntity<T> {
   @PrimaryGeneratedColumn()
   @Field()

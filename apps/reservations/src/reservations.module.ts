@@ -16,7 +16,10 @@ import { z } from 'zod';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
 import { ReservationsResolver } from './reservations.resolver';
 
 @Module({
@@ -53,8 +56,8 @@ import { ReservationsResolver } from './reservations.resolver';
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: {
-        federation: 2
-      }
+        federation: 2,
+      },
     }),
     ClientsModule.registerAsync([
       {
@@ -64,7 +67,7 @@ import { ReservationsResolver } from './reservations.resolver';
           options: {
             package: AUTH_PACKAGE_NAME,
             protoPath: join(__dirname, '../../../proto/auth.proto'),
-            url: configService.getOrThrow("AUTH_GRPC_URL")
+            url: configService.getOrThrow('AUTH_GRPC_URL'),
           },
         }),
         inject: [ConfigService],
@@ -76,7 +79,7 @@ import { ReservationsResolver } from './reservations.resolver';
           options: {
             package: PAYMENTS_PACKAGE_NAME,
             protoPath: join(__dirname, '../../../proto/payments.proto'),
-            url: configService.getOrThrow("PAYMENTS_GRPC_URL")
+            url: configService.getOrThrow('PAYMENTS_GRPC_URL'),
           },
         }),
         inject: [ConfigService],
@@ -84,6 +87,10 @@ import { ReservationsResolver } from './reservations.resolver';
     ]),
   ],
   controllers: [ReservationsController],
-  providers: [ReservationsService, ReservationsRepository, ReservationsResolver],
+  providers: [
+    ReservationsService,
+    ReservationsRepository,
+    ReservationsResolver,
+  ],
 })
-export class ReservationsModule { }
+export class ReservationsModule {}
