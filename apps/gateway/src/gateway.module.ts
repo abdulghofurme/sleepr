@@ -31,7 +31,6 @@ import { authContext } from './auth.context';
           console.log('Config validation error: ', parsed.error.format());
           throw new Error('Invalid configuration');
         }
-
         return parsed.data;
       },
     }),
@@ -48,12 +47,17 @@ import { authContext } from './auth.context';
                 name: 'reservations',
                 url: configService.getOrThrow('RESERVATIONS_GRAPHQL_URL'),
               },
+              {
+                name: 'auth',
+                url: configService.getOrThrow('AUTH_GRAPHQL_URL'),
+              },
             ],
           }),
           buildService: ({ url }) =>
             new RemoteGraphQLDataSource({
               url,
               willSendRequest({ request, context }) {
+                console.log(context.user, 'uhuy');
                 request.http.headers.set(
                   'user',
                   context.user ? JSON.stringify(context.user) : null,

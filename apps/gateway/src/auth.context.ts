@@ -12,16 +12,21 @@ export const setAuthService = (app: INestApplication) => {
 
 export const authContext = async ({ req }) => {
   try {
+    console.log(authService);
+    console.log('=================');
     return authService
       .authenticate({
         Authentication: req.headers?.authentication,
       })
       .pipe(
         map((res) => {
-          console.log({ res });
+          console.log('======= USER ==========');
+          console.log(res);
+          console.log('=================');
           return { user: res };
         }),
         catchError((err) => {
+          console.log(err, 'hueee');
           throw new UnauthorizedException();
         }),
       );

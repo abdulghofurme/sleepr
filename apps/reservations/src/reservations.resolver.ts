@@ -12,15 +12,15 @@ export class ReservationsResolver {
   findAll() {
     return this.reservationsService.findAll();
   }
-
-  @Mutation(() => Reservation)
-  creataReservation(
-    @Args('createReservationInput')
-    createReservationInput: CreateReservationDto,
-    @CurrentUser() user: CurrentUserDto,
-  ) {
-    return this.reservationsService.create(createReservationInput, user);
-  }
+  // TODO: fix bug private query/mutation on @CurrentUser
+  // @Mutation(() => Reservation)
+  // creataReservation(
+  //   @Args('createReservationInput')
+  //   createReservationInput: CreateReservationDto,
+  //   @CurrentUser() user: CurrentUserDto,
+  // ) {
+  //   return this.reservationsService.create(createReservationInput, user);
+  // }
 
   @Query(() => Reservation, { name: 'reservation' })
   findOne(@Args('id', { type: () => Number }) id: number) {
@@ -28,7 +28,7 @@ export class ReservationsResolver {
   }
 
   @Mutation(() => Reservation)
-  removeMutation(@Args('id', { type: () => Number }) id: number) {
+  removeReservation(@Args('id', { type: () => Number }) id: number) {
     return this.reservationsService.remove(id);
   }
 }
