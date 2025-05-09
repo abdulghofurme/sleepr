@@ -5,7 +5,8 @@ services:
       dockerfile: ./apps/reservations/Dockerfile
       target: development
     # command: pnpm run start:dev reservations
-    command: pnpm run start:debug reservations
+    # command: pnpm run start:debug reservations
+    command: sh -c "pnpm prpnpm run start:dev reservations"
     env_file:
       - ./apps/reservations/.env
     ports:
