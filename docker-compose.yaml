@@ -59,12 +59,18 @@ services:
       - '3004:3004'
   # mongo_sleepr:
   #   image: mongo
-  mysql_sleepr:
-    image: mysql
+  # mysql_sleepr:
+  #   image: mysql
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - '3306:3306'
+  postgres_sleepr:
+    image: postgres
+    ports:
+      - 5432:5432
     env_file:
       - .env
-    ports:
-      - '3306:3306'
   rabbitmq:
     image: rabbitmq
     ports:
