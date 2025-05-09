@@ -22,6 +22,7 @@ import {
 } from '@nestjs/apollo';
 import { ReservationsResolver } from './reservations.resolver';
 import { DateFormatScalar } from './scalars/date-format.scalar';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -86,6 +87,7 @@ import { DateFormatScalar } from './scalars/date-format.scalar';
         inject: [ConfigService],
       },
     ]),
+    PrismaModule,
   ],
   controllers: [ReservationsController],
   providers: [
