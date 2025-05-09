@@ -5,7 +5,6 @@ import { Response } from 'express';
 import { UsersService } from './users/users.service';
 import { CreateUserDto } from './users/dto/create-user.dto';
 import { Payload } from '@nestjs/microservices';
-import { JWTAuthGuard } from './guards/jwt-auth.guard';
 import {
   Authentication,
   AuthServiceController,
@@ -15,6 +14,7 @@ import {
   UserMessage,
 } from '@app/common';
 import { Logger } from 'nestjs-pino';
+import { JWTAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller()
 @AuthServiceControllerMethods()

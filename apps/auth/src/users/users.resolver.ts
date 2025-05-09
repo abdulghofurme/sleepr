@@ -2,21 +2,25 @@ import { User } from '@app/common/models';
 import { Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { CurrentUser, CurrentUserDto } from '@app/common';
+import { UseGuards } from '@nestjs/common';
+import { JWTAuthGuard } from '../guards/jwt-auth.guard';
+import { Logger } from 'nestjs-pino';
 
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly logger: Logger,
+  ) {}
 
-  // TODO: fix bug private query/mutation on @CurrentUser
-  // @Query(() => User, { name: 'me' })
-  // async getUser(@CurrentUser() user: CurrentUserDto) {
-  //   console.log(user);
-  //   return user;
-  // }
+  @Query(() => User, { name: 'me' })
+  @UseGuards(JWTAuthGuard)
+  async getUser(@CurrentUser() user: CurrentUserDto) {
+    return user;
+  }
 
-  // TODO: fix bug private query/mutation on @CurrentUser
-  // @Mutation(() => User)
-  // async deleteMyAccount(@CurrentUser() user: CurrentUserDto) {
-  //   return this.usersService.remove(user.id);
-  // }
+  @Mutation(() => User)
+  async deleteMyAccount(@CurrentUser() user: CurrentUserDto) {
+    return this.usersService.remove(user.id);
+  }
 }

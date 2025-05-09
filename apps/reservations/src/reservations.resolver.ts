@@ -2,25 +2,33 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ReservationsService } from './reservations.service';
 import { Reservation } from './models/reservation.entity';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { CurrentUser, CurrentUserDto } from '@app/common';
+import { CurrentUser, CurrentUserDto, JWTAuthGuard } from '@app/common';
+import { UseGuards } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 
 @Resolver(() => Reservation)
 export class ReservationsResolver {
-  constructor(private readonly reservationsService: ReservationsService) {}
+  constructor(
+    private readonly reservationsService: ReservationsService,
+    private readonly logger: Logger,
+  ) {}
 
   @Query(() => [Reservation], { name: 'reservations' })
   findAll() {
     return this.reservationsService.findAll();
   }
-  // TODO: fix bug private query/mutation on @CurrentUser
-  // @Mutation(() => Reservation)
-  // creataReservation(
-  //   @Args('createReservationInput')
-  //   createReservationInput: CreateReservationDto,
-  //   @CurrentUser() user: CurrentUserDto,
-  // ) {
-  //   return this.reservationsService.create(createReservationInput, user);
-  // }
+
+  // TODO: fix this mutation
+  @Mutation(() => Reservation)
+  @UseGuards(JWTAuthGuard)
+  createReservation(
+    @Args('createReservationInput')
+    createReservationInput: CreateReservationDto,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    // this.logger.warn(JSON.stringify(createReservationInput));
+    return this.reservationsService.create(createReservationInput, user);
+  }
 
   @Query(() => Reservation, { name: 'reservation' })
   findOne(@Args('id', { type: () => Number }) id: number) {
@@ -28,6 +36,7 @@ export class ReservationsResolver {
   }
 
   @Mutation(() => Reservation)
+  @UseGuards(JWTAuthGuard)
   removeReservation(@Args('id', { type: () => Number }) id: number) {
     return this.reservationsService.remove(id);
   }

@@ -7,7 +7,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { z } from 'zod';
 import { LocalStrategy } from './users/strategies/local.strategy';
-import { JWTStrategy } from './users/strategies/jwt.strategy';
 import { GraphQLModule } from '@nestjs/graphql';
 import {
   ApolloFederationDriver,
@@ -64,12 +63,6 @@ import { AuthResolver } from './auth.resolver';
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    JWTStrategy,
-    UsersResolver,
-    AuthResolver,
-  ],
+  providers: [AuthService, LocalStrategy, UsersResolver, AuthResolver],
 })
 export class AuthModule {}

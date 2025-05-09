@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationsRepository } from './reservations.repository';
@@ -12,14 +12,12 @@ import {
 import { Reservation } from './models/reservation.entity';
 
 @Injectable()
-export class ReservationsService implements OnModuleInit {
+export class ReservationsService {
   private paymentsService: PaymentsServiceClient;
   constructor(
     private readonly reservationRepository: ReservationsRepository,
     @Inject(PAYMENTS_SERVICE_NAME) private readonly client: ClientGrpc,
-  ) {}
-
-  onModuleInit() {
+  ) {
     this.paymentsService = this.client.getService<PaymentsServiceClient>(
       PAYMENTS_SERVICE_NAME,
     );
@@ -37,7 +35,8 @@ export class ReservationsService implements OnModuleInit {
       .pipe(
         map((res) => {
           const reservation = new Reservation({
-            ...createReservationDto,
+            startDate: createReservationDto.startDate,
+            endDate: createReservationDto.endDate,
             userId,
             invoiceId: res.id,
           });

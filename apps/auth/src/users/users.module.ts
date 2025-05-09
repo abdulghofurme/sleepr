@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { DatabaseModule, LoggerModule } from '@app/common';
 import { UsersRepository } from './users.repository';
 import { Role, User } from '@app/common/models';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { Role, User } from '@app/common/models';
     LoggerModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository],
+  providers: [UsersService, UsersRepository, JwtService],
   exports: [UsersService],
 })
 export class UsersModule {}

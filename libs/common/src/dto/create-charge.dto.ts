@@ -6,7 +6,7 @@ import { Field, InputType } from '@nestjs/graphql';
 export class CreateChargeDto implements Omit<CreateChargeMessage, 'email'> {
   @IsOptional()
   @IsString()
-  @Field()
+  @Field({ nullable: true })
   paymentMethodId?: string;
 
   @IsNotEmpty()
