@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { ReservationsController } from './reservations.controller';
-import { 
-  AUTH_PACKAGE_NAME, 
-  AUTH_SERVICE_NAME, 
-  DatabaseModule, 
-  PAYMENTS_PACKAGE_NAME, 
+import {
+  AUTH_PACKAGE_NAME,
+  AUTH_SERVICE_NAME,
+  DatabaseModule,
+  PAYMENTS_PACKAGE_NAME,
   PAYMENTS_SERVICE_NAME,
 } from '@app/common';
 import { Reservation } from './models/reservation.entity';
@@ -15,6 +15,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { z } from 'zod';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
+import { GraphQLModule } from '@nestjs/graphql';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
+import { ReservationsResolver } from './reservations.resolver';
+import { DateFormatScalar } from './scalars/date-format.scalar';
 
 @Module({
   imports: [
@@ -47,6 +54,12 @@ import { join } from 'path';
         return parsed.data;
       },
     }),
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        federation: 2,
+      },
+    }),
     ClientsModule.registerAsync([
       {
         name: AUTH_SERVICE_NAME,
@@ -55,7 +68,7 @@ import { join } from 'path';
           options: {
             package: AUTH_PACKAGE_NAME,
             protoPath: join(__dirname, '../../../proto/auth.proto'),
-            url: configService.getOrThrow("AUTH_GRPC_URL")
+            url: configService.getOrThrow('AUTH_GRPC_URL'),
           },
         }),
         inject: [ConfigService],
@@ -67,7 +80,7 @@ import { join } from 'path';
           options: {
             package: PAYMENTS_PACKAGE_NAME,
             protoPath: join(__dirname, '../../../proto/payments.proto'),
-            url: configService.getOrThrow("PAYMENTS_GRPC_URL")
+            url: configService.getOrThrow('PAYMENTS_GRPC_URL'),
           },
         }),
         inject: [ConfigService],
@@ -75,6 +88,11 @@ import { join } from 'path';
     ]),
   ],
   controllers: [ReservationsController],
-  providers: [ReservationsService, ReservationsRepository],
+  providers: [
+    ReservationsService,
+    ReservationsRepository,
+    ReservationsResolver,
+    { provide: 'DateFormat', useValue: DateFormatScalar },
+  ],
 })
-export class ReservationsModule { }
+export class ReservationsModule {}

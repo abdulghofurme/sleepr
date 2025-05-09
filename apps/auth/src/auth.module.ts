@@ -7,7 +7,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { z } from 'zod';
 import { LocalStrategy } from './users/strategies/local.strategy';
-import { JWTStrategy } from './users/strategies/jwt.strategy';
+import { GraphQLModule } from '@nestjs/graphql';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
+import { UsersResolver } from './users/users.resolver';
+import { AuthResolver } from './auth.resolver';
 
 @Module({
   imports: [
@@ -49,8 +55,14 @@ import { JWTStrategy } from './users/strategies/jwt.strategy';
       }),
       inject: [ConfigService],
     }),
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        federation: 2,
+      },
+    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JWTStrategy],
+  providers: [AuthService, LocalStrategy, UsersResolver, AuthResolver],
 })
 export class AuthModule {}

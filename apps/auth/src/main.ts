@@ -14,9 +14,9 @@ async function bootstrap() {
   app.connectMicroservice({
     transport: Transport.GRPC,
     options: {
-     package: AUTH_PACKAGE_NAME,
-     protoPath: join(__dirname, '../../../proto/auth.proto'),
-     url: configService.getOrThrow('AUTH_GRPC_URL'),
+      package: AUTH_PACKAGE_NAME,
+      protoPath: join(__dirname, '../../../proto/auth.proto'),
+      url: configService.getOrThrow('AUTH_GRPC_URL'),
     },
   });
   app.use(cookieParser());
