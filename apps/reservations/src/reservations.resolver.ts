@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ReservationsService } from './reservations.service';
-import { Reservation } from './models/reservation.entity';
+import { Reservation } from './entities/reservation.entity';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { CurrentUser, CurrentUserDto, JWTAuthGuard } from '@app/common';
 import { UseGuards } from '@nestjs/common';

@@ -1,19 +1,14 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { DatabaseModule, LoggerModule } from '@app/common';
-import { UsersRepository } from './users.repository';
-import { Role, User } from '@app/common/models';
+import { LoggerModule } from '@app/common';
 import { JwtService } from '@nestjs/jwt';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    DatabaseModule.forFeature([User, Role]),
-    LoggerModule,
-  ],
+  imports: [LoggerModule, PrismaModule],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository, JwtService],
+  providers: [UsersService, JwtService],
   exports: [UsersService],
 })
 export class UsersModule {}

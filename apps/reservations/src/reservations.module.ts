@@ -4,12 +4,9 @@ import { ReservationsController } from './reservations.controller';
 import {
   AUTH_PACKAGE_NAME,
   AUTH_SERVICE_NAME,
-  DatabaseModule,
   PAYMENTS_PACKAGE_NAME,
   PAYMENTS_SERVICE_NAME,
 } from '@app/common';
-import { Reservation } from './models/reservation.entity';
-import { ReservationsRepository } from './reservations.repository';
 import { LoggerModule } from '@app/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { z } from 'zod';
@@ -22,11 +19,10 @@ import {
 } from '@nestjs/apollo';
 import { ReservationsResolver } from './reservations.resolver';
 import { DateFormatScalar } from './scalars/date-format.scalar';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
-    DatabaseModule,
-    DatabaseModule.forFeature([Reservation]),
     LoggerModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -35,12 +31,7 @@ import { DateFormatScalar } from './scalars/date-format.scalar';
           .object({
             PORT: z.coerce.number(),
             // handled by getOrThrow, but declare to document what config/env needed
-            MYSQL_DATABASE: z.string(),
-            MYSQL_USERNAME: z.string(),
-            MYSQL_PASSWORD: z.string(),
-            MYSQL_HOST: z.string(),
-            MYSQL_PORT: z.coerce.number(),
-            MYSQL_SYNCHRONIZE: z.coerce.boolean(),
+            DATABASE_URL: z.string(),
             AUTH_GRPC_URL: z.string(), // client
             PAYMENTS_GRPC_URL: z.string(), // client
           })
@@ -86,11 +77,11 @@ import { DateFormatScalar } from './scalars/date-format.scalar';
         inject: [ConfigService],
       },
     ]),
+    PrismaModule,
   ],
   controllers: [ReservationsController],
   providers: [
     ReservationsService,
-    ReservationsRepository,
     ReservationsResolver,
     { provide: 'DateFormat', useValue: DateFormatScalar },
   ],
