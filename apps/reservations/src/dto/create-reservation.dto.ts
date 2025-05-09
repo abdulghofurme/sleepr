@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { CreateChargeDto } from '@app/common';
 import { Field, InputType } from '@nestjs/graphql';
+import { DateFormatScalar } from '../scalars/date-format.scalar';
 
 @InputType()
 export class CreateReservationDto {
@@ -19,7 +20,7 @@ export class CreateReservationDto {
     return value;
   })
   @IsDate()
-  @Field()
+  @Field(() => DateFormatScalar)
   startDate: Date;
 
   @IsNotEmpty()
@@ -31,7 +32,7 @@ export class CreateReservationDto {
     return value;
   })
   @IsDate()
-  @Field()
+  @Field(() => DateFormatScalar)
   endDate: Date;
 
   @IsNotEmptyObject()

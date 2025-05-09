@@ -18,7 +18,6 @@ export class ReservationsResolver {
     return this.reservationsService.findAll();
   }
 
-  // TODO: fix this mutation
   @Mutation(() => Reservation)
   @UseGuards(JWTAuthGuard)
   createReservation(
@@ -26,7 +25,6 @@ export class ReservationsResolver {
     createReservationInput: CreateReservationDto,
     @CurrentUser() user: CurrentUserDto,
   ) {
-    // this.logger.warn(JSON.stringify(createReservationInput));
     return this.reservationsService.create(createReservationInput, user);
   }
 

@@ -21,6 +21,7 @@ import {
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
 import { ReservationsResolver } from './reservations.resolver';
+import { DateFormatScalar } from './scalars/date-format.scalar';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { ReservationsResolver } from './reservations.resolver';
     ReservationsService,
     ReservationsRepository,
     ReservationsResolver,
+    { provide: 'DateFormat', useValue: DateFormatScalar },
   ],
 })
 export class ReservationsModule {}
