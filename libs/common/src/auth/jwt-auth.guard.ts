@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
+  OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
 import { catchError, map, Observable, tap } from 'rxjs';
@@ -12,13 +13,15 @@ import { Logger } from 'nestjs-pino';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
-export class JWTAuthGuard implements CanActivate {
+export class JWTAuthGuard implements CanActivate, OnModuleInit {
   private authService: AuthServiceClient;
 
   constructor(
     @Inject(AUTH_SERVICE_NAME) private readonly client: ClientGrpc,
     private readonly logger: Logger,
-  ) {
+  ) {}
+
+  async onModuleInit() {
     this.authService =
       this.client.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
   }

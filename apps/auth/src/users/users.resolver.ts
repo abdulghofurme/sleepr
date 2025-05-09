@@ -1,4 +1,4 @@
-import { User } from '@app/common/models';
+import { User } from '@app/common/entities';
 import { Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { CurrentUser, CurrentUserDto } from '@app/common';

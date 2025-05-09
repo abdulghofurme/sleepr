@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "pnpm prisma migrate dev"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +13,7 @@
   "dependencies": {
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.5",
+    "@prisma/client": "^6.7.0",
     "bcryptjs": "^3.0.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -20,6 +22,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
     "@types/passport-jwt": "^4.0.1",
-    "@types/passport-local": "^1.0.38"
+    "@types/passport-local": "^1.0.38",
+    "prisma": "^6.7.0"
   }
 }

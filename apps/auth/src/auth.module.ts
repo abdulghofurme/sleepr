@@ -14,6 +14,7 @@ import {
 } from '@nestjs/apollo';
 import { UsersResolver } from './users/users.resolver';
 import { AuthResolver } from './auth.resolver';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -28,13 +29,8 @@ import { AuthResolver } from './auth.resolver';
             JWT_SECRET: z.string(),
             JWT_EXPIRATION: z.coerce.number(),
             // handled by getOrThrow, but declare to document what config/env needed
-            MYSQL_DATABASE: z.string(),
-            MYSQL_USERNAME: z.string(),
-            MYSQL_PASSWORD: z.string(),
-            MYSQL_HOST: z.string(),
-            MYSQL_PORT: z.coerce.number(),
-            MYSQL_SYNCHRONIZE: z.coerce.boolean(),
             AUTH_GRPC_URL: z.string(),
+            DATABASE_URL: z.string(),
           })
           .safeParse(config);
 
@@ -61,6 +57,7 @@ import { AuthResolver } from './auth.resolver';
         federation: 2,
       },
     }),
+    PrismaModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, UsersResolver, AuthResolver],

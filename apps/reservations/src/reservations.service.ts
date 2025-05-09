@@ -9,6 +9,7 @@ import {
   PaymentsServiceClient,
 } from '@app/common';
 import { PrismaService } from './prisma/prisma.service';
+import { Long } from '@grpc/proto-loader';
 
 @Injectable()
 export class ReservationsService implements OnModuleInit {
@@ -39,7 +40,10 @@ export class ReservationsService implements OnModuleInit {
             data: {
               startDate: createReservationDto.startDate,
               endDate: createReservationDto.endDate,
-              userId,
+              userId:
+                typeof userId === 'object'
+                  ? (userId as Long).toNumber()
+                  : userId,
               invoiceId: res.id,
             },
           });

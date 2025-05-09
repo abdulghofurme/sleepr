@@ -1,4 +1,4 @@
-import { Role } from '@app/common/models/role.entity';
+import { Role } from '@app/common/entities/role.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
